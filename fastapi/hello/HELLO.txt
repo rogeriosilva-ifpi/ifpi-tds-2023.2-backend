@@ -1,0 +1,5 @@
+Contrato da API
+---------------------
+PATH      METHOD    DESCRIPTION     STATUS    BODY
+/hello    GET       Boas vindas!    200       "Olá Seja bem-vindo!"
+/animais  GET       Listar animais  200       {"animais": "Serão listados aqui "}
