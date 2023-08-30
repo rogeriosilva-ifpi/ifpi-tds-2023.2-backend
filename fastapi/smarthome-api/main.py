@@ -8,7 +8,7 @@ from ulid import ulid
 app = FastAPI()
 
 # Ativar CORS
-origins = ['http://localhost:5500']
+origins = ['http://localhost:5500','https://smarthome-web.onrender.com']
 
 app.add_middleware(
     CORSMiddleware,
