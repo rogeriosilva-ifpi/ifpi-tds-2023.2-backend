@@ -1,3 +1,5 @@
+from ast import List
+
 from fastapi import FastAPI, HTTPException, status
 from pydantic import BaseModel
 
@@ -28,7 +30,7 @@ def hello():
     return {"mensagem": "Olá seja bem-vindo!"}
 
 
-@app.get('/animais')
+@app.get('/animais', response_model=list[Animal])
 def obter_todos_os_animais():
     return animais
 
