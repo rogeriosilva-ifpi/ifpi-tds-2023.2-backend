@@ -1,0 +1,96 @@
+:root{
+  --dark-bg-color: #263238;
+  --bg-color: #37474F;
+  --text-color: #ffffff;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body{
+  background: var(--bg-color);
+  color: var(--text-color);
+  font-family: 'Roboto';
+}
+
+#container{
+  box-shadow: 1px 1px 3px 2px #ccc;
+  max-width: 600px;
+  margin: 0 auto;
+  margin-top: 5px;
+
+  display: flex;
+  flex-direction: column;
+
+  height: 97vh;
+}
+
+header{
+  background: var(--dark-bg-color);
+
+  /* flex: 2; */
+  height: 80px;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+main{
+  /* background: red; */
+  flex: 1;
+
+  padding-top: 1rem;
+}
+
+footer{
+  background: var(--dark-bg-color);
+  /* flex: 1; */
+  height: 35px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+header img{
+  width: 80px;
+}
+
+header h1{
+ font-size: 1.3rem;
+ text-align: center;
+ flex: 1;
+}
+
+
+footer p{
+  font-size: 0.6rem;
+  font-style: italic;
+}
+
+
+main h2{
+  font-size: 1rem;
+  text-align: center;
+}
+
+table{
+  font-size: 0.7rem;
+  width: 100%;
+}
+
+table tr{
+  height: 1.5rem;
+}
+
+table tbody tr:nth-child(odd) {
+  background-color: #546E7A;
+}
+
+table tbody td:first-child{
+  text-align: center;
+}
