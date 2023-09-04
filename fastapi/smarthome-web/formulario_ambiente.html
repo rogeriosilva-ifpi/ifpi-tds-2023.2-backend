@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500&family=Roboto:wght@100;300;400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/index.css">
-  <script src="assets/js/comportamento.js" defer></script>
+  <script src="assets/js/formulario-ambiente.js" defer></script>
   <title>SmartHome</title>
 </head>
 <body>
@@ -17,20 +17,12 @@
       <h1>SmartHome: Ambientes Inteligentes</h1>
     </header>
     <main>
-      <h2>Ambientes Cadastrados</h2>
-      <nav>
-        <a class="botao" href="formulario_ambiente.html">NOVO</a>
-      </nav>
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Descrição</th>
-          </tr>
-        </thead>
-        <tbody id="ambientes">
-        </tbody>
-      </table>
+      <h2>Novo Ambiente</h2>
+      <form id="formulario-ambiente" action="#">
+        <label for="descricao">Descrição: </label>
+        <input type="text" id="descricao" />
+        <input class="botao" type="submit" value="Salvar Ambiente">
+      </form>
     </main>
     <footer>
       <p>SmartHome: fim por fim feito por mim!</p>

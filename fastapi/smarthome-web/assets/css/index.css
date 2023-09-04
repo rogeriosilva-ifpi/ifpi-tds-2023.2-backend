@@ -76,6 +76,12 @@ footer p{
 main h2{
   font-size: 1rem;
   text-align: center;
+  margin-bottom: 1rem;
+}
+
+nav{
+  display: flex;
+  justify-content: end;
 }
 
 table{
@@ -93,4 +99,24 @@ table tbody tr:nth-child(odd) {
 
 table tbody td:first-child{
   text-align: center;
+}
+
+.botao{
+  background: #ECEFF1;
+  color: var(--dark-bg-color);
+  text-decoration: none;
+  padding: 1px 15px;
+  border-radius: 4px;
+  font-weight: bold;
+  box-shadow: 1px 1px 2px 1px #B2FF59;
+
+  font-size: 0.8rem;
+
+  margin-right: 10px;
+
+  cursor: pointer;
+}
+
+.botao:hover{
+  background: #90A4AE;
 }
