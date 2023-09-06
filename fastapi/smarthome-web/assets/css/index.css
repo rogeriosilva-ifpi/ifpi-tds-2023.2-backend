@@ -120,3 +120,22 @@ table tbody td:first-child{
 .botao:hover{
   background: #90A4AE;
 }
+
+.botao-table{
+  background: white;
+  color: red;
+  border-radius: 2px;
+  padding: 2px 6px;
+  display: block;
+  text-align: center;
+  margin: 0 auto;
+  width: 60px;
+  cursor: pointer;
+
+  transition: 0.4s border-radius;
+}
+
+.botao-table:hover{
+  font-weight: bold;
+  border-radius: 6px;
+}
