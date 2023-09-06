@@ -3,12 +3,25 @@ from curses import noraw
 from fastapi import FastAPI, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+from sqlalchemy import table
+from sqlmodel import Field, Session, SQLModel, create_engine, delete, select
 from ulid import ulid
 
 app = FastAPI()
 
+# SQL Model
+# db_url = 'sqlite:///database.db'
+# db_url = 'postgresql+psycopg2://postgres:postgres@localhost:5432/smarthome'
+db_url = 'postgresql+psycopg2://smarthome_b2hz_user:pmtszsfMU1fKevP6GYrznZdvJHxX2007@dpg-cjsd4rktjf3s73biv9tg-a.oregon-postgres.render.com/smarthome_b2hz'
+# postgres://user:password@host/db
+
+engine = create_engine(db_url, echo=True)
+
+
 # Ativar CORS
-origins = ['http://localhost:5500','https://smarthome-web.onrender.com']
+origins = ['http://localhost:5500',
+           'http://127.0.0.1:5500',
+           'https://smarthome-web.onrender.com']
 
 app.add_middleware(
     CORSMiddleware,
@@ -30,30 +43,35 @@ class Dispositivo(BaseModel):
     estado_conexao: str | None
     status: bool | None
 
-class Ambiente(BaseModel):
-    id: str | None = None
-    descricao: str
-    icone: int | None = None
-    items: list[Dispositivo] = []
 
-'''Aréa Ambiente'''
-def buscar_ambiente_por_id(id: str):
-    for ambiente in ambientes:
-        if ambiente.id == id:
-            return ambiente
-    return None
+class Ambiente(SQLModel, table=True):
+    id: int | None = Field(default=None, primary_key=True)
+    descricao: str
+    icone: str | None = Field(default='icone.png')
+    # items: list[Dispositivo] = []
+
+SQLModel.metadata.create_all(engine)
+
+'''Ambiente'''
+def buscar_ambiente_por_id(id: int):
+    session = Session(engine)
+    instrucao = select(Ambiente).where(Ambiente.id == id)
+    ambiente = session.exec(instrucao).first()
+    return ambiente
 
 @app.get('/ambientes', status_code=status.HTTP_200_OK)
 def show_ambiente():
+    session = Session(engine)
+    instrucao = select(Ambiente)
+    ambientes = session.exec(instrucao).fetchall()
     return ambientes
 
 @app.post('/ambientes', status_code=status.HTTP_201_CREATED)
 def criar_ambiente(ambiente: Ambiente):
-    # global ambiente_id
-    # ambiente.icone = ambiente_id
-    # ambiente_id += 1
-    ambiente.id = ulid()
-    ambientes.append(ambiente)
+    session = Session(engine)
+    session.add(ambiente)
+    session.commit()
+    session.refresh(ambiente)
     return ambiente
 
 @app.put('/ambientes/{id}', status_code=status.HTTP_200_OK)
@@ -70,16 +88,19 @@ def atualizar_ambientes(id: str, ambiente: Ambiente):
     
 
 @app.delete('/ambientes/{id}', status_code=status.HTTP_204_NO_CONTENT)
-def remover_ambiente(id: str):
+def remover_ambiente(id: int):
     ambiente = buscar_ambiente_por_id(id)
     
     if not ambiente:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Ambiente não encontrado')
     
-    if len(ambiente.items) > 0:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Ambiente não pode ser removido")
+    # if len(ambiente.items) > 0:
+    #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Ambiente não pode ser removido")
     
-    ambientes.remove(ambiente)
+    session = Session(engine)
+    instrucao = delete(Ambiente).where(Ambiente.id == id)
+    session.exec(instrucao)
+    session.commit()
 
 '''Área Dispositivo'''
 @app.post('/ambientes/{id}/dispositivos')
