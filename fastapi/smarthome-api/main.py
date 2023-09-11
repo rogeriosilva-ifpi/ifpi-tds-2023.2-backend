@@ -1,5 +1,3 @@
-from curses import noraw
-
 from fastapi import FastAPI, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -37,28 +35,44 @@ ambientes = []
 ambiente_id = 0
 dispositivo_id = 0
 
-
-class Ambiente(SQLModel, table=True):
-    id: int | None = Field(default=None, primary_key=True)
+class AmbienteBase(SQLModel):
     descricao: str
     icone: str | None = Field(default='icone.png')
+
+
+class Ambiente(AmbienteBase, table=True):
+    id: int | None = Field(default=None, primary_key=True)
+    
     dispositivos: list['Dispositivo'] = Relationship(back_populates='ambiente')
 
 
-class Dispositivo(SQLModel, table=True):
-    id: int | None = Field(default=None, primary_key=True)
+class AmbienteLeitura(AmbienteBase):
+    id: int
+
+
+class DispositivoBase(SQLModel):
     description: str
     icone: str | None = Field(default='icone.png')
     estado_conexao: bool | None = Field(default=True)
     status: bool | None = Field(default=False)
 
     ambiente_id: int | None = Field(default=None, foreign_key="ambiente.id")
+
+
+class DispositivoComAmbiente(DispositivoBase):
+    id: int
+    ambiente: AmbienteLeitura | None = None
+
+
+# Vai virar tabela (table=True)
+class Dispositivo(DispositivoBase, table=True):
+    id: int | None = Field(default=None, primary_key=True)
+
     ambiente: Ambiente | None = Relationship(back_populates='dispositivos')
 
 
-
-
 SQLModel.metadata.create_all(engine)
+
 
 '''Ambiente'''
 def buscar_ambiente_por_id(id: int):
@@ -66,16 +80,29 @@ def buscar_ambiente_por_id(id: int):
     instrucao = select(Ambiente).where(Ambiente.id == id)
     ambiente = session.exec(instrucao).first()
     session.close()
+
     return ambiente
 
-@app.get('/ambientes', status_code=status.HTTP_200_OK)
-def show_ambiente():
+@app.get('/ambientes', status_code=status.HTTP_200_OK, response_model=list[AmbienteLeitura])
+async def obter_ambientes():
     session = Session(engine)
     instrucao = select(Ambiente)
     ambientes = session.exec(instrucao).fetchall()
     session.close()
 
     return ambientes
+
+
+@app.get('/ambientes/{id}', status_code=status.HTTP_200_OK, response_model=AmbienteLeitura)
+async def obter_ambiente(id: int):
+    ambiente = buscar_ambiente_por_id(id)
+
+    # Fail Fast
+    if not ambiente:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Ambiente não encontrado')
+    
+    return ambiente
+
 
 @app.post('/ambientes', status_code=status.HTTP_201_CREATED)
 def criar_ambiente(ambiente: Ambiente):
@@ -139,6 +166,17 @@ def obter_dispositivos(ambiente_id: int):
     return dispositivos
 
 
+@app.get('/ambientes/{ambiente_id}/dispositivos/{dispositivo_id}', response_model=DispositivoComAmbiente)
+def obter_dispositivo(ambiente_id: int, dispositivo_id: int):
+    dispositivo = buscar_dispositivo_por_id(dispositivo_id)
+
+    # Fail Fast
+    if not dispositivo or dispositivo.ambiente_id != ambiente_id:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Dispositivo não encontrado')
+
+    return dispositivo
+
+
 @app.post('/ambientes/{id}/dispositivos')
 def adicionar_dispositivo(id: int, dispositivo: Dispositivo):
     ambiente = buscar_ambiente_por_id(id)
@@ -180,6 +218,8 @@ def buscar_dispositivo_por_id(id: int):
     session = Session(engine)
     instrucao = select(Dispositivo).where(Dispositivo.id == id)
     dispositivo = session.exec(instrucao).first()
+    # para carregar relação "ambiente"
+    dispositivo.ambiente
     session.close()
     return dispositivo
 
