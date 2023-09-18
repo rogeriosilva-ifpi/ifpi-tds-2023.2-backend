@@ -21,6 +21,6 @@ class ValidateApelidoMiddleware(BaseHTTPMiddleware):
       person = personRepo.findBy(apelido=apelido)
 
       if person:
-        return Response('Apelido Indisponível', status_code=422)
+        return Response('Apelido Indisponível!', status_code=422)
 
       return await call_next(request)

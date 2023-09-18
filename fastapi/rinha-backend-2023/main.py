@@ -9,7 +9,7 @@ app = FastAPI()
 
 app.include_router(router=router, prefix=prefix)
 
-app.add_middleware(ValidateApelidoMiddleware)
+# app.add_middleware(ValidateApelidoMiddleware)
 
 init_create_tables()
 

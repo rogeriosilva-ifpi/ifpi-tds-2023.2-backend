@@ -1,0 +1,45 @@
+version: '3.8'
+services:
+  api1: # API - Instância 01
+    image: rinhabackend2023:latest
+    build:
+      context: .
+      # target: development
+      dockerfile: ./Dockerfile
+    hostname: rinhabackend2023
+    depends_on:
+      - postgresql
+    expose:
+      - "9999"
+    ports:
+      - 9999:9999
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: '0.5GB'
+    volumes:
+      - .:/app
+    networks:
+      - backend
+  postgresql:
+    container_name: rinha-postgresql
+    image: bitnami/postgresql:latest
+    ports:
+      - 5431:5432
+    volumes:
+      - postgresql_data:/bitnami/postgresql
+    environment:
+      - POSTGRESQL_DATABASE=rinha
+      - POSTGRESQL_USER=rinha
+      - POSTGRESQL_PASSWORD=rinha
+      - POSTGRESQL_POSTGRES_PASSWORD=rinha
+    networks:
+      - backend
+
+volumes:
+  postgresql_data:
+    driver: local
+
+networks:
+  backend:
