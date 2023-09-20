@@ -23,3 +23,15 @@ class PessoaRepository:
     def obter_por_apelido(self, apelido: str):
         sttm = select(Pessoa).where(Pessoa.apelido == apelido)
         return self.session.exec(sttm).first()
+
+    def buscar_pessoas(self, termo: str) -> list[Pessoa]:
+        criterio = Pessoa.nome.like(f'%{termo}%') | Pessoa.apelido.like(
+            f'%{termo}%') | Pessoa.stack.like(f'%{termo}%')
+
+        pessoas = self.session.query(Pessoa).filter(criterio).limit(50)
+
+        return pessoas
+
+    def contagem_pessoas(self) -> int:
+        quantidade = self.session.query(Pessoa).count()
+        return quantidade

@@ -1,5 +1,5 @@
 from fastapi import APIRouter, status, HTTPException, Response
-from models import PessoaCreate, Pessoa
+from models import PessoaCreate, Pessoa, PessoaRead
 from sqlmodel import Session
 from db_utils import obter_engine
 from pessoa_repository import PessoaRepository
@@ -18,6 +18,14 @@ def adicionar_pessoa(pessoa: PessoaCreate, response: Response):
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail='Apelido indisponível!')
 
+    # validar stack
+    for item in pessoa.stack:
+        if len(item) > 32:
+            raise HTTPException(
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                detail=f'Cada item da Stack deve ter no máximo 32 caracteres'
+            )
+
     nova_pessoa = repo.salvar(pessoa)
     response.headers['Location'] = f'/pessoas/{nova_pessoa.id}'
 
@@ -33,3 +41,15 @@ def obter_pessoa(id: str):
             status_code=status.HTTP_404_NOT_FOUND, detail='Pessoa não localizada!')
 
     return pessoa.to_pessoa_read()
+
+
+@router.get('/', response_model=list[PessoaRead])
+def buscar_pessoas(t: str):
+    pessoas = repo.buscar_pessoas(t)
+
+    pessoas_read = []
+
+    for pessoa in pessoas:
+        pessoas_read.append(pessoa.to_pessoa_read())
+
+    return pessoas_read

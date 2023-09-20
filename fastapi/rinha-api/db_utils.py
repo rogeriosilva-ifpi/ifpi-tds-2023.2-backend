@@ -1,8 +1,14 @@
 from sqlmodel import create_engine, SQLModel
+from decouple import config
 
 
 def obter_engine():
-    url_db = 'postgresql+psycopg2://docker:docker@localhost:5430/rinha_api'
+    HOST = config('DB_HOST')
+    PORT = config('DB_PORT')
+    DB = config('DB_DATABASE')
+    USER = config('DB_USER')
+    PASSWORD = config('DB_PASSWORD')
+    url_db = f'postgresql+psycopg2://{USER}:{PASSWORD}@{HOST}:{PORT}/{DB}'
     engine = create_engine(url_db, echo=True)
     return engine
 
