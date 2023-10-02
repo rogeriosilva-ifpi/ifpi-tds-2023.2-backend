@@ -19,3 +19,6 @@ class AuthRepository:
     def get_user_by_login(self, login: str):
         sttm = select(User).where(User.login == login)
         return self.session.exec(sttm).first()
+
+    def get_user_by_id(self, id: str):
+        return self.session.get(User, id)

@@ -23,6 +23,10 @@ class User(UserBase, table=True):
         user.password = user_create.password
         return user
 
+    def to_user_read(self):
+        user = UserRead(id=self.id, name=self.name, login=self.login)
+        return user
+
 
 class UserRead(UserBase):
     id: str
@@ -33,12 +37,27 @@ class TaskBase(SQLModel):
     done: bool = Field(default=False)
 
 
+class TaskCreate(TaskBase):
+    pass
+
+
 class Task(TaskBase, table=True):
     id: str = Field(default=ulid(), primary_key=True)
-
     user_id: str | None = Field(default=None, foreign_key="user.id")
+
+    @staticmethod
+    def from_task_create(task_create: TaskCreate):
+        task = Task()
+        task.description = task_create.description
+        task.done = task_create.done
+        return task
+
+    def to_task_read(self):
+        task = TaskRead(
+            id=self.id, description=self.description, done=self.done)
+        return task
 
 
 class TaskRead(TaskBase):
     id: str
-    owner: User | None = None
+    owner: UserRead | None = None
