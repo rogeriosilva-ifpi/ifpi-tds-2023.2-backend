@@ -18,6 +18,7 @@ DEBUG = config('DEBUG', default=True, cast=bool)
 ALLOWED_HOSTS = [
 	'0.0.0.0',
 	'localhost',
+	'django-deploy-example.onrender.com',
 ]
 
 CSRF_TRUSTED_ORIGINS = [
