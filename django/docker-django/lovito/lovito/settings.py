@@ -42,6 +42,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
 	'django.middleware.security.SecurityMiddleware',
+	'whitenoise.middleware.WhiteNoiseMiddleware',
 	'django.contrib.sessions.middleware.SessionMiddleware',
 	'django.middleware.common.CommonMiddleware',
 	'django.middleware.csrf.CsrfViewMiddleware',
@@ -127,7 +128,11 @@ USE_TZ = True
 # STATIC_ROOT (collectstatic) *DEBUG-False
 # This will copy all files from your static folders
 # into the STATIC_ROOT directory.
-STATIC_ROOT = '/home/app/web/staticfiles'
+
+#  External NGINX:
+#  STATIC_ROOT = '/home/app/web/staticfiles'
+
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATIC_URL = 'static/'
 
 STATICFILES_DIRS = ['static']
@@ -140,3 +145,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# whitenoise
+STORAGES = {
+	# ...
+	'staticfiles': {
+		'BACKEND': 'whitenoise.storage.CompressedManifestStaticFilesStorage',
+	},
+}
