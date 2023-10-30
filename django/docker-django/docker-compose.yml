@@ -1,0 +1,48 @@
+version: '3.9'
+services:
+  # Reverse Proxy e Load Balance
+  nginx:
+    container_name: nginx
+    build: ./nginx
+    ports:
+      - 1337:80
+    volumes:
+      - static_volume:/home/app/web/staticfiles
+      - media_volume:/home/app/web/mediafiles
+    depends_on:
+      - web
+    restart: "on-failure"
+   
+  # Django application(production)
+  web:
+    container_name: web
+    build: 
+      context: ./lovito
+      target: production
+    
+    command: sh -c "python manage.py makemigrations &&
+                   python manage.py collectstatic --noinput &&
+                   gunicorn lovito.wsgi:application --bind 0.0.0.0:8000"
+    # STATIC_ROOT folder with assets (collectstatic)
+    volumes:
+      - static_volume:/home/app/web/staticfiles
+      - media_volume:/home/app/web/mediafiles
+    restart: "on-failure"
+  
+  # Django application(development)
+  dev:
+    container_name: web-dev
+    build: 
+      context: ./lovito
+      target: development
+    # command: python manage.py runserver 0.0.0.0:8000
+    ports: # host:docker
+      - 8000:8000
+    volumes:
+      - ./lovito:/home/app/
+    restart: "on-failure"
+
+volumes:
+  postgres_data:
+  static_volume:
+  media_volume:

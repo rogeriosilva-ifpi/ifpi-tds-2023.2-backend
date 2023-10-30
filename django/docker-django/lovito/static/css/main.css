@@ -1,0 +1,18 @@
+:root {
+  --cor-primaria: #00796b; /* Verde/Ciano Escuro */
+  --cor-secundaria: #004d40; /* Tom mais escuro de Verde/Ciano */
+  --cor-fundo: #121212; /* Fundo Escuro */
+  --cor-texto: #ffffff; /* Texto Branco para Contraste */
+  --cor-destaque: #ffab00; /* Destaque em Amarelo */
+  
+  /* Outras variáveis de cor conforme necessário */
+}
+
+body {
+  background-color: var(--cor-fundo);
+  color: var(--cor-texto);
+}
+
+h1 {
+  color: var(--cor-destaque);
+}
