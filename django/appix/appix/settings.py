@@ -78,10 +78,12 @@ DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": "appix",
-        "USER": "postgres",
-        "PASSWORD": "postgres",
+        "USER": "docker",
+        "PASSWORD": "",
         "HOST": "172.17.0.2",
+        # "HOST": "localhost",
         "PORT": "5432",
+        # "PORT": "5430",
     }
 }
 
