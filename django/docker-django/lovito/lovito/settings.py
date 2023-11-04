@@ -15,17 +15,11 @@ SECRET_KEY = 'django-insecure-7c&-tup=eviwd%un58!9e5oxbcfbn=y3v)#3#0(lyegui_g$+@
 # pip install python-decouple
 DEBUG = config('DEBUG', default=True, cast=bool)
 
-ALLOWED_HOSTS = [
-	'0.0.0.0',
-	'localhost',
-	'django-deploy-example.onrender.com',
-]
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default=[], cast=lambda x: [h for h in x.split(',')])
 
-CSRF_TRUSTED_ORIGINS = [
-	'http://localhost:1337',
-	'http://127.0.0.1:1337',
-	'https://django-deploy-example.onrender.com',
-]
+CSRF_TRUSTED_ORIGINS = config(
+	'CSRF_TRUSTED_ORIGINS', default=[], cast=lambda x: [h for h in x.split(',')]
+)
 
 
 # Application definition
@@ -130,9 +124,9 @@ USE_TZ = True
 # into the STATIC_ROOT directory.
 
 #  External NGINX:
-#  STATIC_ROOT = '/home/app/web/staticfiles'
+STATIC_ROOT = '/home/app/web/staticfiles'
 
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+# STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATIC_URL = 'static/'
 
 STATICFILES_DIRS = ['static']

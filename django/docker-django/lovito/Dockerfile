@@ -20,7 +20,7 @@ EXPOSE 8000
 FROM base as development
 # OBS. RENDER: Não tem supor a multistage, incluir comando abaixo na interface web
 # Docker Command python manage.py runserver 0.0.0.0:8000
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+# CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
 
 # Prod Stage
 FROM base as production
