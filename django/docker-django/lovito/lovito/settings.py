@@ -15,10 +15,10 @@ SECRET_KEY = 'django-insecure-7c&-tup=eviwd%un58!9e5oxbcfbn=y3v)#3#0(lyegui_g$+@
 # pip install python-decouple
 DEBUG = config('DEBUG', default=True, cast=bool)
 
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default=[], cast=lambda x: [h for h in x.split(',')])
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=lambda x: [h.strip() for h in x.split(',')])
 
 CSRF_TRUSTED_ORIGINS = config(
-	'CSRF_TRUSTED_ORIGINS', default=[], cast=lambda x: [h for h in x.split(',')]
+	'CSRF_TRUSTED_ORIGINS', cast=lambda x: [h.strip() for h in x.split(',')]
 )
 
 
