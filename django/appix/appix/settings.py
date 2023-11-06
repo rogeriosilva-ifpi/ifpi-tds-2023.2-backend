@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-&sqhs4zp20dzwwz4!za7hz-nr9b-@ay4e+$mz&sq92pz@6$d0_
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['appix-teste.onrender.com']
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -78,20 +78,12 @@ WSGI_APPLICATION = 'appix.wsgi.application'
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": config('DB_NAME'),
-        "USER": config('DB_USER'),
-        "PASSWORD": config('DB_PASSWORD'),
-        "HOST": config('DB_HOST'),
-        "PORT": config('DB_PORT'),
+        "NAME": "appix",
+        "USER": "postgres",
+        "PASSWORD": "password123",
+        "HOST": "172.17.0.2",
+        "PORT": "5432",
     }
-    # "default": {
-    #     "ENGINE": "django.db.backends.postgresql",
-    #     "NAME": "appix",
-    #     "USER": "docker",
-    #     "PASSWORD": "docker",
-    #     "HOST": "172.17.0.2",
-    #     "PORT": "5432",
-    # }
 }
 
 
@@ -117,8 +109,8 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
-# LANGUAGE_CODE = 'pt-BR'
-LANGUAGE_CODE = 'en-US'
+LANGUAGE_CODE = 'pt-BR'
+# LANGUAGE_CODE = 'en-US'
 
 TIME_ZONE = 'UTC'
 
