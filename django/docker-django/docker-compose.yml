@@ -14,17 +14,16 @@ services:
     depends_on:
       - web
     restart: "on-failure"
-   
+
   # Django application(production)
   web:
     container_name: web
-    build: 
+    build:
       context: ./lovito
       target: production
-    # environment:
+      # environment:
       # - DEBUG=False
-    command: sh -c "python manage.py collectstatic --noinput &&
-                   gunicorn lovito.wsgi:application --bind 0.0.0.0:8000"
+    command: sh -c "python manage.py collectstatic --noinput && gunicorn lovito.wsgi:application --bind 0.0.0.0:8000"
     # STATIC_ROOT folder with assets (collectstatic)
     ports:
       - 80:8000
@@ -34,17 +33,18 @@ services:
     networks:
       - django_app_net
     restart: "on-failure"
-  
+
   # Django application(development)
   dev:
     container_name: web-dev
-    build: 
+    build:
       context: ./lovito
       target: development
-    # environment:
+      # environment:
       # - DEBUG=True
     command: python manage.py runserver 0.0.0.0:8000
-    ports: # host:docker
+    ports:
+      # host:docker
       - 8000:8000
     volumes:
       - ./lovito:/home/app/
@@ -52,9 +52,9 @@ services:
       - django_app_net
     depends_on:
       postgres:
-        condition: service_healthy 
+        condition: service_healthy
     restart: always
-  
+
   # Postgres
   postgres:
     container_name: postgres-dev
@@ -62,7 +62,7 @@ services:
     volumes:
       - postgres_data:/bitnami/postgresql
     ports:
-      - 5432:5432
+      - 5433:5432
     environment:
       - POSTGRESQL_DATABASE=${DB_NAME}
       - POSTGRESQL_USERNAME=${DB_USER}
@@ -72,7 +72,7 @@ services:
     # Evitar App busca PG antes dele estar "pronto"
     # https://laurent-bel.medium.com/waiting-for-postgresql-to-start-in-docker-compose-c72271b3c74a
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -83,4 +83,3 @@ volumes:
   media_volume:
 networks:
   django_app_net:
-    
