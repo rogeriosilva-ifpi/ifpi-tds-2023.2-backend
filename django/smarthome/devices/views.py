@@ -2,9 +2,12 @@ from django.http import HttpResponse, HttpRequest
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.generics import ListCreateAPIView,RetrieveUpdateDestroyAPIView 
+from rest_framework.viewsets import ModelViewSet
+from rest_framework.permissions import IsAuthenticated
 
-from devices.models import Ambiente
-from devices.serializers import AmbienteSerializer
+from devices.models import Ambiente, Dispositivo
+from devices.serializers import AmbienteSerializer, DispositivoSerializer
 
 def hello(request: HttpRequest):
   return HttpResponse('OK, deu certo!')
@@ -19,6 +22,8 @@ class PingView(APIView):
     # print('data', request.data)
     nome = request.data.get('nome') or 'Não Informada'
     return Response({'nome': nome}, status=201)
+
+"""
 
 
 class AmbienteListCreateView(APIView):
@@ -46,7 +51,7 @@ class AmbienteDetailUpdateView(APIView):
       serializer = AmbienteSerializer(ambiente)
       return Response(serializer.data)
     except:
-      return Response(status=404)
+      return Response({'detail': 'Não localizado!'}, status=404)
   
   def put(self, request, pk):
     try:
@@ -67,4 +72,26 @@ class AmbienteDetailUpdateView(APIView):
       return Response(status=204)
     except:
       return Response({'detail': 'Não localizado!'},status=404)
+"""
 
+# AMBIENTES
+class AmbienteViewSet(ModelViewSet):
+  queryset = Ambiente.objects.all()
+  serializer_class = AmbienteSerializer
+  permission_classes = [IsAuthenticated]
+
+class DispositivoViewSet(ModelViewSet):
+  queryset = Dispositivo.objects.all()
+  serializer_class = DispositivoSerializer
+  permission_classes = [IsAuthenticated]
+
+
+# DISPOSITIVOS (DRF Generic Views)
+# class DispositivoListCreateView(ListCreateAPIView):
+#   queryset = Dispositivo.objects.all()
+#   serializer_class = DispositivoSerializer
+
+
+# class DispositivoDetailUpdateDeleteView(RetrieveUpdateDestroyAPIView):
+#   queryset = Dispositivo.objects.all()
+#   serializer_class = DispositivoSerializer

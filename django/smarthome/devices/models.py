@@ -4,6 +4,9 @@ class Ambiente(models.Model):
   nome = models.CharField(max_length=100)
   atualizado_em = models.DateTimeField(auto_now=True)
 
+  def count_dispositivos(self):
+    return len(self.dispositivos.all())
+
   def __str__(self):
     return f'{self.nome}'
 
